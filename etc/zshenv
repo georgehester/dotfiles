@@ -1,0 +1,11 @@
+# Load /etc/paths and /etc/paths.d/* into PATH
+if [ -x /usr/libexec/path_helper ]; then
+    eval $(/usr/libexec/path_helper -s)
+fi
+
+# Load homebrew into PATH
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Load homebrew scripts without cask into PATH
+export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"

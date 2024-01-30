@@ -1,0 +1,39 @@
+# Display utf8 correctly
+if [[ "$(locale LC_CTYPE)" == "UTF-8" ]]; then
+    setopt COMBINING_CHARS
+fi
+
+# Disable builtin command history
+disable log
+
+# Setup command history
+HISTSIZE=2000
+SAVEHIST=1000
+HISTFILE=~/.zsh_history
+
+# Turn off beep
+setopt nobeep
+
+# Setup default key bindings
+[[ -n ${key[Delete]} ]] && bindkey "${key[Delete]}" delete-char
+[[ -n ${key[Home]} ]] && bindkey "${key[Home]}" beginning-of-line
+[[ -n ${key[End]} ]] && bindkey "${key[End]}" end-of-line
+[[ -n ${key[Up]} ]] && bindkey "${key[Up]}" up-line-or-search
+[[ -n ${key[Down]} ]] && bindkey "${key[Down]}" down-line-or-search
+
+# Function to get the current git branch
+function git_branch_name() {
+    branch=$(git symbolic-ref HEAD 2>/dev/null | awk 'BEGIN{FS="/"} {print $NF}')
+    if [[ $branch == "" ]]; then
+        :
+    else
+        echo '['$branch'] '
+    fi
+}
+
+# Setup the prompt
+setopt prompt_subst
+PROMPT='%n %F{197}%1~%f %F{48}$(git_branch_name)%f%# '
+
+# Create clear command that clears both current view and the buffer
+alias clear="clear && printf '\e[3J'"
